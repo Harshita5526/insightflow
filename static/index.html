@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>InsightFlow</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0c12;--c:rgba(26,29,42,.62);--t:#f4f1ec;--m:#a3a8b8;--a:#ffb347;--a2:#ff8a5b;--a3:#ff5d73;--g:#5be3a0;--r:#ff5d73;--y:#ffd166;--b:rgba(255,255,255,.1)}
+*{box-sizing:border-box}body{margin:0;font:15px/1.55 Sora,system-ui,sans-serif;color:var(--t);background:var(--bg);min-height:100vh}
+body:before{content:"";position:fixed;inset:0;z-index:-2;background:radial-gradient(620px 420px at 8% -5%,rgba(255,179,71,.28),transparent),radial-gradient(560px 460px at 95% 20%,rgba(255,93,115,.2),transparent),radial-gradient(500px 300px at 50% 105%,rgba(255,138,91,.14),transparent)}
+body:after{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px) 0 0/26px 26px;-webkit-mask-image:linear-gradient(#000,transparent 70%);mask-image:linear-gradient(#000,transparent 70%)}
+header{position:sticky;top:12px;margin:12px auto 0;max-width:1180px;width:calc(100% - 32px);display:flex;align-items:center;gap:16px;padding:8px 10px 8px 18px;border-radius:999px;background:rgba(18,20,30,.72);backdrop-filter:blur(16px);border:1px solid var(--b);z-index:5}
+.brand{display:flex;gap:10px;align-items:center}.brand h1{margin:0;font-size:18px;letter-spacing:-.3px}.brand small{display:none}
+.logo{width:26px;height:26px;border-radius:8px;transform:rotate(45deg) scale(.82);background:linear-gradient(135deg,var(--a),var(--a3));box-shadow:0 0 18px rgba(255,138,91,.8)}
+nav{display:flex;gap:4px;flex:1;justify-content:center;flex-wrap:wrap}
+nav button{font:inherit;border:0;background:none;color:var(--m);padding:8px 16px;border-radius:999px;cursor:pointer;transition:.2s}
+nav button:hover{color:var(--t);background:rgba(255,255,255,.07)}nav button.on{color:#1d1206;font-weight:600;background:linear-gradient(135deg,var(--a),var(--a3));box-shadow:0 0 20px rgba(255,138,91,.5)}
+.btn{font:inherit;font-weight:600;border:0;color:#1d1206;padding:10px 18px;border-radius:999px;cursor:pointer;background:linear-gradient(135deg,var(--a),var(--a3));box-shadow:0 6px 22px rgba(255,138,91,.35);transition:.2s;display:inline-block;text-align:center}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,138,91,.6)}.btn.ghost{background:rgba(255,179,71,.08);color:var(--a);border:1px solid rgba(255,179,71,.5);box-shadow:none}
+:focus-visible{outline:2px solid var(--a);outline-offset:2px}code{color:var(--a)}
+main{max-width:1180px;margin:0 auto;padding:26px 20px 70px}.tab{display:none}.tab.on{display:block}
+.hero{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;margin-bottom:18px}
+.hello h2{font-size:34px;margin:0;letter-spacing:-1px}.hello p{margin:2px 0 18px;color:var(--m)}
+.ai{display:flex;gap:14px;align-items:flex-start;padding:16px 20px;border-radius:20px;background:linear-gradient(135deg,rgba(255,179,71,.18),rgba(255,93,115,.1));border:1px solid rgba(255,179,71,.45);box-shadow:0 0 40px rgba(255,138,91,.15)}
+.orb{flex:none;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--a) 40%,var(--a3));box-shadow:0 0 22px var(--a2);animation:pulse 2.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 38px var(--a2);transform:scale(1.08)}}.ai b{color:var(--a)}
+.ecg{stroke-dasharray:340;stroke-dashoffset:340;animation:ecg 2.6s linear infinite}@keyframes ecg{to{stroke-dashoffset:-340}}
+.ask form{display:flex;gap:10px}.ask input{flex:1;font-size:16px;padding:14px 18px;border-radius:999px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.chip{font:inherit;font-size:13px;padding:5px 13px;border-radius:99px;border:1px solid var(--b);background:rgba(255,255,255,.04);color:var(--m);cursor:pointer;transition:.2s}.chip:hover{color:var(--t);border-color:var(--a)}
+.ans{display:none;margin-top:12px;padding:14px 16px;border-radius:16px;background:rgba(255,179,71,.08);border:1px solid rgba(255,179,71,.35)}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}select,input,textarea{font:inherit;padding:10px 12px;border:1px solid var(--b);border-radius:12px;background:rgba(12,14,22,.85);color:var(--t)}option{background:#10131c}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:18px}
+.kpi{padding:16px 18px;border-radius:20px;background:var(--c);border:1px solid var(--b);backdrop-filter:blur(10px);transition:.25s}
+.kpi:hover{transform:translateY(-4px);border-color:var(--k);box-shadow:0 0 32px -4px var(--k)}
+.kpi span{color:var(--m);font-size:13px}.kpi strong{display:block;font-size:clamp(20px,2vw,27px);line-height:1.2;margin:6px 0;color:var(--k)}
+.meter{height:6px;background:rgba(255,255,255,.09);border-radius:4px;margin:8px 0}.meter i{display:block;height:100%;border-radius:4px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}.wide{grid-column:1/-1}
+.box{background:var(--c);border:1px solid var(--b);border-radius:20px;padding:18px;backdrop-filter:blur(10px);transition:.25s}.box:hover{border-color:rgba(255,179,71,.45)}.box h3{margin:0 0 12px;font-size:16px}
+.heat{display:grid;grid-template-columns:minmax(120px,190px) repeat(8,1fr);gap:5px;align-items:center}.heat span{font-size:13px}.heat small{color:var(--m);font-size:11px;text-align:center}
+.heat i{height:30px;border-radius:7px;background:rgba(255,93,115,var(--o));transition:.15s}.heat i:hover{transform:scale(1.12);box-shadow:0 0 14px var(--a3)}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--b);vertical-align:top}th{color:var(--m);font-weight:500;font-size:13px}tbody tr{transition:.15s}tbody tr:hover{background:rgba(255,179,71,.08)}.tbl{overflow-x:auto}
+.tag{padding:2px 10px;border-radius:99px;font-size:12px;white-space:nowrap}
+.positive{background:rgba(91,227,160,.14);color:var(--g);border:1px solid var(--g)}.negative{background:rgba(255,93,115,.14);color:var(--r);border:1px solid var(--r)}.neutral{background:rgba(163,168,184,.14);color:var(--m);border:1px solid var(--m)}
+.rec{display:grid;grid-template-columns:84px 1fr auto;gap:18px;padding:18px;margin-bottom:12px;border:1px solid var(--b);border-radius:18px;align-items:center;background:rgba(255,255,255,.02);transition:.25s}
+.rec:hover{transform:translateX(5px);border-color:var(--k);box-shadow:0 0 30px -8px var(--k)}
+.ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--k) calc(var(--p)*1%),rgba(255,255,255,.09) 0)}
+.ring b{width:56px;height:56px;border-radius:50%;background:#10131c;display:grid;place-items:center;font-size:20px}
+.flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}.flow div{background:rgba(255,255,255,.04);border:1px solid var(--b);border-radius:14px;padding:12px 16px}.flow b{display:block;font-size:24px;color:var(--a)}
+.muted{color:var(--m)}form.add{display:grid;gap:8px}
+@media(max-width:860px){.hero{grid-template-columns:1fr}header{border-radius:22px;flex-wrap:wrap}.rec{grid-template-columns:1fr}.heat{grid-template-columns:100px repeat(8,1fr)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<header><div class="brand"><i class="logo"></i><div><h1>InsightFlow</h1><small>Feedback, decoded</small></div></div><nav id="nav"></nav><a class="btn ghost" href="/report" target="_blank" style="text-decoration:none">📄 Export report</a></header>
+<main>
+<section class="tab on" id="t-dash">
+ <div class="hero"><div><div class="hello"><h2 id="hi">Hello</h2><p>Here is what your customers are saying today. Fix what matters first.</p></div>
+  <div class="ai"><i class="orb"></i><div id="insight">Analysing feedback...</div></div></div><div class="box" id="pulse"></div></div>
+ <div class="box ask" style="margin-bottom:18px"><form id="askf"><input id="askq" placeholder="Ask your feedback anything, e.g. what should we fix first?"><button class="btn">Ask AI</button></form>
+  <div class="chips"><button class="chip">What should we fix first?</button><button class="chip">Which issue is growing fastest?</button><button class="chip">Why are customers unhappy?</button></div><div class="ans" id="ans"></div></div>
+ <div class="bar"><select id="fc"><option value="">All categories</option></select><select id="fs"><option value="">All sentiments</option><option>positive</option><option>neutral</option><option>negative</option></select><select id="ft"><option value="">All topics</option></select></div>
+ <div class="kpis" id="kpis"></div>
+ <div class="box" style="margin-bottom:18px"><h3>Issue heatmap: where complaints are heating up</h3><div class="heat" id="heat"></div></div>
+ <div class="box" style="margin-bottom:18px"><h3>What if we fix it?</h3><div class="bar" style="margin:0;align-items:center"><select id="sim"></select><span id="simout" class="muted"></span></div></div>
+ <div class="grid"><div class="box"><h3>Sentiment split</h3><canvas id="c1" height="200"></canvas></div>
+ <div class="box"><h3>Most reported issues</h3><canvas id="c2" height="200"></canvas></div>
+ <div class="box wide"><h3>Feedback over the last 8 weeks</h3><canvas id="c3" height="90"></canvas></div>
+ <div class="box wide tbl"><h3>Similar feedback groups</h3><table><thead><tr><th>Group (most common wording)</th><th>Topic</th><th>Mentions</th><th>Negative</th></tr></thead><tbody id="cl"></tbody></table></div></div>
+</section>
+<section class="tab" id="t-feed">
+ <div class="box" style="margin-bottom:16px"><h3>Add feedback</h3><form class="add" id="addf"><textarea id="nr" rows="2" placeholder="Paste a customer review"></textarea>
+ <div class="bar" style="margin:0"><select id="nc"></select><button class="btn">Analyse and save</button><label class="btn ghost">Import CSV<input type="file" id="csv" accept=".csv" hidden></label><span class="muted" id="msg"></span></div></form></div>
+ <div class="bar"><input id="q" placeholder="Search reviews" style="flex:1;min-width:200px"><select id="gc"><option value="">All categories</option></select><select id="gs"><option value="">All sentiments</option><option>positive</option><option>neutral</option><option>negative</option></select></div>
+ <div class="box tbl"><table><thead><tr><th>Date</th><th>Review</th><th>Category</th><th>Topic</th><th>Sentiment</th></tr></thead><tbody id="rows"></tbody></table><p class="muted" id="cnt"></p></div>
+</section>
+<section class="tab" id="t-rec"><div class="box"><h3>What to fix first</h3><div id="recs"></div></div></section>
+<section class="tab" id="t-iss"><div class="box tbl"><h3>Tracked issues</h3><table><thead><tr><th>Issue</th><th>Priority score</th><th>Why</th><th>Status</th></tr></thead><tbody id="iss"></tbody></table></div></section>
+<section class="tab" id="t-ad"><div class="box"><h3>How Adaption cleans the data before analysis</h3><div class="flow" id="flow"></div>
+ <p>The uploaded CSV is sent to Adaption through its API (upload, run with deduplication, then evaluation and download). InsightFlow analyses only the cleaned dataset that comes back, so a smaller, higher-quality set drives every chart and recommendation. Raw counts are kept so frequency still feeds the priority score.</p>
+ <h3 style="margin-top:20px">Live from Adaption</h3><div id="live" class="muted">Checking Adaption...</div>
+ <div class="bar" style="margin-top:12px"><label class="btn ghost">Send a CSV to Adaption<input type="file" id="adcsv" accept=".csv" hidden></label><button class="btn" id="ingest" hidden>Add cleaned data to dashboard</button><span class="muted" id="admsg"></span></div>
+ <p class="muted">Uploads are limited to 500 rows. Adaption runs take a few minutes; this page checks progress every 10 seconds.</p></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s),api=(u,o)=>fetch(u,o).then(r=>r.json()),esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const TABS=[["dash","🏠 Dashboard"],["feed","💬 Feedback"],["rec","🎯 Recommendations"],["iss","📌 Issues"],["ad","⚡ Adaption"]];let ch={},inited=false;Chart.defaults.color="#a3a8b8";Chart.defaults.borderColor="rgba(255,255,255,.07)";Chart.defaults.font.family="Sora";
+$("#nav").innerHTML=TABS.map(t=>`<button data-t="${t[0]}">${t[1]}</button>`).join("");
+function show(t){document.querySelectorAll(".tab").forEach(e=>e.classList.toggle("on",e.id=="t-"+t));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==t));({dash,feed,rec,iss,ad:()=>{dash();adaption()}}[t])()}
+$("#nav").onclick=e=>e.target.dataset.t&&show(e.target.dataset.t);
+function draw(id,cfg){ch[id]&&ch[id].destroy();ch[id]=new Chart($("#"+id),cfg)}
+const qs=()=>"category="+encodeURIComponent($("#fc").value)+"&sentiment="+$("#fs").value+"&topic="+encodeURIComponent($("#ft").value);
+async function dash(){const s=await api("/api/summary?"+qs());
+ if(!inited){inited=true;for(const c of s.options.categories)for(const id of ["#fc","#gc","#nc"])$(id).add(new Option(c,c));for(const t of s.options.topics)$("#ft").add(new Option(t,t))}
+ const m=s.meta,p=n=>Math.round(100*n/Math.max(s.total,1));
+ $("#insight").innerHTML=s.top?`<b>AI insight</b> <span style="opacity:.7">(${esc(m.engine||"Rules")} analysis)</span> &nbsp;${esc(s.top.topic)} is the top priority. ${esc(s.top.why)} Suggested action: ${esc(s.top.action)}`:"No negative feedback found.";
+ const hs=100-p(s.neg),hl=hs>=70?"Healthy":hs>=45?"Watch":"At risk",hc=hs>=70?"#5be3a0":hs>=45?"#ffd166":"#ff5d73";
+ const K=(l,v,c,b)=>`<div class="kpi" style="--k:${c}"><span>${l}</span><strong>${v}</strong>${b!=null?`<div class="meter"><i style="width:${b}%;background:${c}"></i></div>`:""}</div>`;
+ $("#kpis").innerHTML=K("Feedback analysed",s.total,"#ffb347")+K("Customer health",hl+" "+hs,hc,hs)+K("Negative share",p(s.neg)+"%","#ff5d73",p(s.neg))+K("Top issue",s.topics[0]?esc(s.topics[0].topic):"None","#ff8a5b")+K("Data quality (Adaption)",m.grade_before+" to "+m.grade_after,"#5be3a0",Math.round(m.score_after*10));
+ pulse(hs,hl,hc,p(s.neg));heat(s.heat);simUI(s);
+ draw("c1",{type:"doughnut",data:{labels:["Positive","Neutral","Negative"],datasets:[{data:[s.pos,s.neu,s.neg],backgroundColor:["#5be3a0","#8b90a3","#ff5d73"],borderWidth:0}]},options:{cutout:"62%"}});
+ draw("c2",{type:"bar",data:{labels:s.topics.map(t=>t.topic),datasets:[{label:"Negative",data:s.topics.map(t=>t.neg),backgroundColor:"#ff5d73"},{label:"Other",data:s.topics.map(t=>t.count-t.neg),backgroundColor:"#ffcf7a"}]},options:{indexAxis:"y",scales:{x:{stacked:true},y:{stacked:true}}}});
+ const T=s.trend;draw("c3",{type:"line",data:{labels:T.labels,datasets:[["Negative","negative","#ff5d73"],["Neutral","neutral","#8b90a3"],["Positive","positive","#5be3a0"]].map(x=>({label:x[0],data:T[x[1]],borderColor:x[2],backgroundColor:x[2],tension:.3}))}});
+ api("/api/clusters?"+qs()).then(c=>$("#cl").innerHTML=c.map(x=>`<tr><td>${esc(x.label)}<br><span class="muted">${x.variants} wording variant${x.variants>1?"s":""}</span></td><td>${esc(x.topic)}</td><td>${x.count}</td><td><div class="meter" style="width:120px"><i style="width:${Math.round(100*x.neg/x.count)}%;background:var(--r)"></i></div>${Math.round(100*x.neg/x.count)}%</td></tr>`).join("")||`<tr><td colspan=4>No groups for this filter.</td></tr>`);
+ $("#flow").innerHTML=`<div><b>${m.raw_rows}</b>raw rows (${m.raw_unique} unique)</div><div>to</div><div><b>${m.adapted_rows}</b>after Adaption</div><div>to</div><div><b>${m.grade_before} to ${m.grade_after}</b>quality grade (${m.score_before} to ${m.score_after}, +${m.improvement}%)</div><div>to</div><div><b>${m.kept_rows}</b>rows analysed</div>`}
+["#fc","#fs","#ft"].forEach(i=>$(i).onchange=dash);
+async function feed(){const s=await api(`/api/feedback?search=${encodeURIComponent($("#q").value)}&category=${encodeURIComponent($("#gc").value)}&sentiment=${$("#gs").value}&limit=60`);
+ $("#rows").innerHTML=s.items.map(r=>`<tr><td>${r.date}</td><td>${esc(r.review)}</td><td>${esc(r.category)}</td><td>${esc(r.topic)}</td><td><span class="tag ${r.sentiment}">${r.sentiment}</span></td></tr>`).join("")||`<tr><td colspan=5>No feedback matches. Clear a filter or import a CSV.</td></tr>`;
+ $("#cnt").textContent=`Showing ${s.items.length} of ${s.total}`}
+["#q","#gc","#gs"].forEach(i=>$(i).oninput=feed);
+$("#addf").onsubmit=async e=>{e.preventDefault();const r=await api("/api/feedback",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({review:$("#nr").value,category:$("#nc").value})});
+ $("#msg").textContent=r.error||`Saved: ${r.item.sentiment}, ${r.item.topic}`;if(r.ok){$("#nr").value="";feed()}};
+$("#csv").onchange=async e=>{const f=new FormData();f.append("file",e.target.files[0]);$("#msg").textContent="Importing...";const r=await api("/api/import",{method:"POST",body:f});$("#msg").textContent=r.error||`Imported ${r.added} reviews`;feed()};
+const col=p=>p=="High"?"#ff5d73":p=="Medium"?"#ffd166":"#5be3a0";
+async function rec(){const r=await api("/api/recommendations");
+ $("#recs").innerHTML=r.map(o=>`<div class="rec" style="--k:${col(o.priority)}"><div class="ring" style="--p:${o.score}"><b>${o.score}</b></div><div><b style="font-size:17px">${esc(o.topic)}</b> <span class="tag" style="background:${col(o.priority)}22;color:${col(o.priority)};border:1px solid ${col(o.priority)}">${o.priority} priority</span><div class="meter"><i style="width:${o.score}%;background:${col(o.priority)}"></i></div><div class="muted">Why: ${esc(o.why)}</div><div style="margin-top:6px">Action: ${esc(o.action)}</div></div><button class="btn ghost" data-t='${esc(JSON.stringify({topic:o.topic,why:o.why,score:o.score}))}'>Track issue</button></div>`).join("")}
+$("#recs").onclick=async e=>{const d=e.target.dataset.t;if(!d)return;await api("/api/issues",{method:"POST",headers:{"Content-Type":"application/json"},body:d});e.target.textContent="Tracked";e.target.disabled=true};
+async function iss(){const r=await api("/api/issues");
+ $("#iss").innerHTML=r.map(i=>`<tr><td><b>${esc(i.topic)}</b><br><span class="muted">since ${i.created}</span></td><td>${i.score}</td><td>${esc(i.why)}</td><td><select data-i="${i.id}">${["Open","In progress","Resolved"].map(s=>`<option ${s==i.status?"selected":""}>${s}</option>`).join("")}</select></td></tr>`).join("")||`<tr><td colspan=4>No tracked issues yet. Open Recommendations and choose Track issue.</td></tr>`}
+$("#iss").onchange=e=>api("/api/issues/"+e.target.dataset.i,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({status:e.target.value})});
+let adid="",adt;
+async function adaption(){const a=await api("/api/adaption"+(adid?"?dataset_id="+adid:""));
+ $("#live").innerHTML=a.live?`Dataset <code>${a.dataset_id.slice(0,8)}</code> is <b>${a.status}</b> with ${a.rows} rows${a.total?`, processed ${a.processed} of ${a.total}`:""}${a.grade_after?`. Quality grade ${a.grade_before} to ${a.grade_after} (score ${a.score_before} to ${a.score_after})`:""}.`:`Live connection unavailable (${esc(a.error||"no API key on server")}). Showing saved results above.`;
+ $("#ingest").hidden=!(a.live&&adid&&a.status=="succeeded");if(!$("#ingest").hidden)clearInterval(adt)}
+$("#adcsv").onchange=async e=>{const f=new FormData();f.append("file",e.target.files[0]);$("#admsg").textContent="Sending to Adaption...";const r=await api("/api/adaption/start",{method:"POST",body:f});
+ if(r.error){$("#admsg").textContent=r.error;return}adid=r.dataset_id;$("#admsg").textContent=`Started on ${r.rows} rows.`;clearInterval(adt);adt=setInterval(adaption,10000);adaption()};
+$("#ingest").onclick=async()=>{const r=await api("/api/adaption/ingest",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({dataset_id:adid})});$("#admsg").textContent=r.error||`Added ${r.added} cleaned reviews to the dashboard.`;if(r.added){$("#ingest").hidden=true;dash()}};
+const hr=new Date().getHours();$("#hi").textContent=(hr<12?"Good morning":hr<17?"Good afternoon":"Good evening")+"! 👋";
+function pulse(hs,hl,hc,ng){$("#pulse").innerHTML=`<span class="muted">Customer pulse</span><div style="display:flex;align-items:baseline;gap:10px"><strong style="font-size:46px;color:${hc};text-shadow:0 0 24px ${hc}">${hs}</strong><b style="color:${hc}">${hl}</b></div><svg viewBox="0 0 300 80" style="width:100%;height:80px;overflow:visible;transform:scaleY(${1+(100-hs)/80});filter:drop-shadow(0 0 6px ${hc})"><path class="ecg" pathLength="340" d="M0 40H60L68 34L76 40H92L98 10L106 68L114 40H150L158 34L166 40H182L188 10L196 68L204 40H300" fill="none" stroke="${hc}" stroke-width="2.5" stroke-linejoin="round"/></svg><span class="muted">${ng}% of feedback is negative right now</span>`}
+function heat(h){const mx=Math.max(1,...h.rows.flatMap(r=>r.cells));$("#heat").innerHTML="<span></span>"+h.labels.map(l=>`<small>${l}</small>`).join("")+h.rows.map(r=>`<span>${esc(r.topic)}</span>`+r.cells.map(c=>`<i style="--o:${(.06+.9*c/mx).toFixed(2)}" title="${c} negative"></i>`).join("")).join("")}
+let lastS=null;
+function simUI(s){lastS=s;const sel=$("#sim"),v=sel.value;sel.innerHTML=s.topics.filter(t=>t.neg).map(t=>`<option>${esc(t.topic)}</option>`).join("");if(v)sel.value=v;sim()}
+function sim(){const s=lastS,t=s.topics.find(x=>x.topic==$("#sim").value);if(!t){$("#simout").textContent="Nothing to fix.";return}const a=Math.round(100*s.neg/Math.max(s.total,1)),b=Math.round(100*(s.neg-t.neg)/Math.max(s.total,1));$("#simout").innerHTML=`If we resolve this: negative share <b>${a}%</b> to <b style="color:var(--g)">${b}%</b>, customer health <b>${100-a}</b> to <b style="color:var(--g)">${100-b}</b>.`}
+$("#sim").onchange=sim;
+async function ask(q){const a=$("#ans");a.style.display="block";a.textContent="Thinking...";const r=await api("/api/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({q})});
+ a.innerHTML=`<b>${r.engine==="Rules"?"InsightFlow":r.engine}</b> <span class="muted">answers from your data</span><br><span id="at"></span>`;let i=0;const t=r.answer,el=$("#at"),iv=setInterval(()=>{el.textContent=t.slice(0,++i);if(i>=t.length)clearInterval(iv)},14)}
+$("#askf").onsubmit=e=>{e.preventDefault();$("#askq").value.trim()&&ask($("#askq").value)};
+document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{$("#askq").value=c.textContent;ask(c.textContent)});
+show("dash");
+</script></body></html>
