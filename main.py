@@ -25,7 +25,7 @@ ACTIONS = {
  "Product Quality": "Open a quality review with suppliers for the most-reported products.",
  "Features & Value": "Review pricing and feature messaging against what customers say.",
 }
-def dago(r): return (TODAY - dt.date.fromisoformat(r["date"])).days
+def dago(r): return max(0, (TODAY - dt.date.fromisoformat(r["date"])).days)
 def save_issues(): json.dump(ISSUES, open(IF, "w"))
 
 def filt(category="", sentiment="", topic="", search=""):
