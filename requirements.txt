@@ -3,3 +3,5 @@ uvicorn
 pandas
 requests
 python-multipart
+python-dotenv
+adaption==0.14.0

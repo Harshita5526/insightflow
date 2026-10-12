@@ -6,10 +6,11 @@ from fastapi.staticfiles import StaticFiles
 import pandas as pd
 from analyzer import analyze_many, llm_text  # also loads .env
 
-D = json.load(open("data.json", encoding="utf-8"))
+BASE = os.path.dirname(os.path.abspath(__file__))
+D = json.load(open(os.path.join(BASE, "data.json"), encoding="utf-8"))
 ROWS, META = D["rows"], D["meta"]
 TODAY = dt.date.today()
-IF = "issues.json"
+IF = os.path.join(tempfile.gettempdir(), "issues.json")
 try: ISSUES = json.load(open(IF))
 except Exception: ISSUES = []
 app = FastAPI(title="InsightFlow")
@@ -208,4 +209,4 @@ td,th{{border-bottom:1px solid #ddd;padding:8px;text-align:left;vertical-align:t
 <h2>Priority issues</h2><table><tr><th>Issue</th><th>Priority</th><th>Why it matters</th><th>Recommended action</th></tr>{rows}</table>
 <h2>Tracked issues</h2><ul>{iss}</ul>"""
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+app.mount("/", StaticFiles(directory=os.path.join(BASE, "static"), html=True), name="static")
